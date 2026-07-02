@@ -1,0 +1,22 @@
+{
+  "base_url": "http://localhost:9000",
+  "username": "listmonk",
+  "access_token": "change-me",
+  "list_id": 1,
+  "public_list_uuid": "optional-public-list-uuid",
+  "subscriber_id": 1,
+  "campaign_id": 1,
+  "campaign_from_email": "optional-sender@example.com",
+  "campaign_template_id": "optional-template-id",
+  "campaign_messenger": "email",
+  "campaign_test_email": "optional-test-recipient@example.com",
+  "template_id": 1,
+  "bounce_id": 1,
+  "media_file": "optional/path/to/file.png",
+  "import_file": "optional/path/to/subscribers.csv",
+  "create_test_data": false,
+  "send_campaign_test": false,
+  "set_default_template": false,
+  "delete_subscriber_bounces": false,
+  "delete_import": false
+}
