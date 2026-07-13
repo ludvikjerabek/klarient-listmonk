@@ -1,5 +1,5 @@
 # Listmonk API Package
-
+[![PyPI Downloads](https://static.pepy.tech/badge/klarient-listmonk)](https://pepy.tech/projects/klarient-listmonk)  
 Library implements the Listmonk REST API via Python.
 
 ### Requirements:
