@@ -45,7 +45,7 @@ class BounceQuery(QueryRequest):
             order: BounceSortOrder | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             campaign_id=campaign_id,
             page=page,
             per_page=per_page,
@@ -106,7 +106,7 @@ class BounceDeleteQuery(QueryRequest):
             ids: list[int] | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(all=all, ids=ids)
+        self._set_optional_fields(all=all, ids=ids)
 
     all = RequestField[bool](value_type=bool)
     ids = RequestField[list[int]](

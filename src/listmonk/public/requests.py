@@ -16,7 +16,7 @@ class PublicSubscription(JSONBodyRequest):
             list_uuids: list[str] | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             email=email,
             name=name,
             list_uuids=list_uuids,
@@ -53,7 +53,7 @@ class PublicSubscriptionForm(FormBodyRequest):
             list_uuids: list[str] | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             email=email,
             name=name,
             list_uuids=list_uuids,

@@ -27,7 +27,7 @@ class TemplateCreate(JSONBodyRequest):
             body: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             name=name,
             type=type,
             subject=subject,
@@ -83,7 +83,7 @@ class TemplatePreviewRender(FormBodyRequest):
             body: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(type=type, body=body)
+        self._set_optional_fields(type=type, body=body)
 
     type = RequestField[TemplateType](name="template_type", value_type=TemplateType)
     body = RequestField[str](value_type=str)

@@ -54,7 +54,7 @@ class SubscriberQuery(QueryRequest):
             per_page: int | PerPage | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             query=query,
             list_id=list_id,
             subscription_status=subscription_status,
@@ -160,7 +160,7 @@ class SubscriberCreate(JSONBodyRequest):
             preconfirm_subscriptions: bool | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             email=email,
             name=name,
             status=status,
@@ -221,7 +221,7 @@ class SubscriberUpdate(JSONBodyRequest):
             preconfirm_subscriptions: bool | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             email=email,
             name=name,
             status=status,
@@ -280,7 +280,7 @@ class SubscriberListMembershipUpdate(JSONBodyRequest):
             status: SubscriptionStatus | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             ids=ids,
             action=action,
             target_list_ids=target_list_ids,
@@ -328,7 +328,7 @@ class QueryListMembershipUpdate(JSONBodyRequest):
             subscription_status: SubscriptionStatus | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             action=action,
             target_list_ids=target_list_ids,
             query=query,
@@ -387,7 +387,7 @@ class SubscriberIds(JSONBodyRequest):
 
     def __init__(self, *, ids: list[int] | None = None) -> None:
         super().__init__()
-        self._set_defined_fields(ids=ids)
+        self._set_optional_fields(ids=ids)
 
     ids = RequestField[list[int]](value_type=list, validator=list_of(int))
 
@@ -402,7 +402,7 @@ class SubscriberDeleteQuery(QueryRequest):
 
     def __init__(self, *, ids: list[int] | None = None) -> None:
         super().__init__()
-        self._set_defined_fields(ids=ids)
+        self._set_optional_fields(ids=ids)
 
     ids = RequestField[list[int]](
         name="id",
@@ -427,7 +427,7 @@ class SubscriberQueryBlocklist(JSONBodyRequest):
             list_ids: list[int] | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(query=query, list_ids=list_ids)
+        self._set_optional_fields(query=query, list_ids=list_ids)
 
     query = RequestField[str](value_type=str)
     list_ids = RequestField[list[int]](value_type=list, validator=list_of(int))
@@ -454,7 +454,7 @@ class SubscriberQueryDelete(JSONBodyRequest):
             all: bool | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(query=query, list_ids=list_ids, all=all)
+        self._set_optional_fields(query=query, list_ids=list_ids, all=all)
 
     query = RequestField[str](value_type=str)
     list_ids = RequestField[list[int]](value_type=list, validator=list_of(int))

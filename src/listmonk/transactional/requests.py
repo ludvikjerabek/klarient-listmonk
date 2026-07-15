@@ -70,7 +70,7 @@ class TransactionalMessage(RequestFields, RequestOptionsProvider):
             attachments: list[MultipartValue] | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             subscriber_email=subscriber_email,
             subscriber_id=subscriber_id,
             subscriber_emails=subscriber_emails,

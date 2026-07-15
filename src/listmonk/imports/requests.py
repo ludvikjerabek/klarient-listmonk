@@ -36,7 +36,7 @@ class SubscriberImportParams(RequestFields):
             subscription_status: SubscriptionStatus | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             mode=mode,
             delim=delim,
             lists=lists,
@@ -88,7 +88,7 @@ class SubscriberImport(RequestFields, RequestOptionsProvider):
             content_type: str = "text/csv",
     ) -> None:
         super().__init__()
-        self._set_defined_fields(params=params)
+        self._set_optional_fields(params=params)
         if file is not None:
             self.file = (
                 MultipartValue(file, filename=filename, content_type=content_type)

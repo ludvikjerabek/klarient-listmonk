@@ -47,7 +47,7 @@ class ListQuery(QueryRequest):
             per_page: int | PerPage | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             query=query,
             status=status,
             minimal=minimal,
@@ -131,7 +131,7 @@ class ListCreate(JSONBodyRequest):
             description: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             name=name,
             type=type,
             optin=optin,
@@ -194,7 +194,7 @@ class ListDeleteQuery(QueryRequest):
             query: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(ids=ids, query=query)
+        self._set_optional_fields(ids=ids, query=query)
 
     ids = RequestField[list[int]](
         name="id",

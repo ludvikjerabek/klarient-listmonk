@@ -78,7 +78,7 @@ class CampaignQuery(QueryRequest):
             no_body: bool | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             order=order,
             order_by=order_by,
             query=query,
@@ -157,7 +157,7 @@ class CampaignRetrieveQuery(QueryRequest):
 
     def __init__(self, *, no_body: bool | None = None) -> None:
         super().__init__()
-        self._set_defined_fields(no_body=no_body)
+        self._set_optional_fields(no_body=no_body)
 
     no_body = RequestField[bool](value_type=bool)
 
@@ -190,7 +190,7 @@ class CampaignCreate(JSONBodyRequest):
             attribs: dict[str, Any] | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             name=name,
             subject=subject,
             lists=lists,
@@ -313,7 +313,7 @@ class CampaignTest(CampaignCreate):
             **fields: Any,
     ) -> None:
         super().__init__(**fields)
-        self._set_defined_fields(subscribers=subscribers)
+        self._set_optional_fields(subscribers=subscribers)
 
     subscribers = RequestField[list[str]](value_type=list, validator=list_of(str))
 
@@ -328,7 +328,7 @@ class CampaignStatusUpdate(JSONBodyRequest):
 
     def __init__(self, *, status: CampaignStatus | None = None) -> None:
         super().__init__()
-        self._set_defined_fields(status=status)
+        self._set_optional_fields(status=status)
 
     status = RequestField[CampaignStatus](value_type=CampaignStatus)
 
@@ -350,7 +350,7 @@ class CampaignArchiveUpdate(JSONBodyRequest):
             archive_slug: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(
+        self._set_optional_fields(
             archive=archive,
             archive_template_id=archive_template_id,
             archive_meta=archive_meta,
@@ -393,7 +393,7 @@ class CampaignDeleteQuery(QueryRequest):
             query: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(ids=ids, query=query)
+        self._set_optional_fields(ids=ids, query=query)
 
     ids = RequestField[list[int]](
         name="id",
@@ -419,7 +419,7 @@ class CampaignRunningStatsQuery(QueryRequest):
 
     def __init__(self, *, campaign_ids: list[int] | None = None) -> None:
         super().__init__()
-        self._set_defined_fields(campaign_ids=campaign_ids)
+        self._set_optional_fields(campaign_ids=campaign_ids)
 
     campaign_ids = RequestField[list[int]](
         name="campaign_id",
@@ -445,7 +445,7 @@ class CampaignAnalyticsQuery(QueryRequest):
             to: str | None = None,
     ) -> None:
         super().__init__()
-        self._set_defined_fields(ids=ids, from_=from_, to=to)
+        self._set_optional_fields(ids=ids, from_=from_, to=to)
 
     ids = RequestField[list[int]](
         name="id",
