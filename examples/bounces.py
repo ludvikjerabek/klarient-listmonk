@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from common import ListMonkClient, enabled, load_settings, setting, show_resource, skip
+from common import enabled, load_settings, setting, skip
+from listmonk import ListMonkClient
 from listmonk.bounces import (
     BounceDeleteQuery,
     BounceOrderBy,
@@ -20,7 +21,9 @@ def main() -> None:
 
     # This collection resource models /api/bounces directly. The examples print
     # paths so it is clear which URI each object represents.
-    show_resource("Bounce collection resource", client.bounces)
+    print("Bounce collection resource:")
+    print(f"  path: {client.bounces.path}")
+    print(f"  url:  {client.bounces.url}")
 
     query = (
         BounceQuery()
@@ -51,7 +54,9 @@ def main() -> None:
     bounce_resource = client.bounces[bounce_id]
     # Collection indexing follows the same pattern across the wrapper:
     # client.bounces[123] -> /api/bounces/123.
-    show_resource("Single bounce resource", bounce_resource)
+    print("Single bounce resource:")
+    print(f"  path: {bounce_resource.path}")
+    print(f"  url:  {bounce_resource.url}")
 
     deleted_one = bounce_resource.delete()
     print(f"deleted_one={deleted_one.data}")

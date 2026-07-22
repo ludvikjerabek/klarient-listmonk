@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from common import ListMonkClient, load_settings, setting, show_resource, skip
+from common import load_settings, setting, skip
+from listmonk import ListMonkClient
 from listmonk.transactional import (
     TransactionalContentType,
     TransactionalMessage,
@@ -17,7 +18,9 @@ def main() -> None:
     )
 
     # The tx resource models the actual Listmonk path: /api/tx.
-    show_resource("Transactional message resource", client.tx)
+    print("Transactional message resource:")
+    print(f"  path: {client.tx.path}")
+    print(f"  url:  {client.tx.url}")
 
     template_id = setting(settings, "transactional_template_id", setting(settings, "template_id"))
     if template_id is None:

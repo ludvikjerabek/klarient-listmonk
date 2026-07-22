@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import time
 
-from common import ListMonkClient, load_settings, run_optional, setting, show_resource, skip
+from common import load_settings, run_optional, setting, skip
+from listmonk import ListMonkClient
 from listmonk.public import PublicSubscription, PublicSubscriptionForm
 
 
@@ -16,8 +17,12 @@ def main() -> None:
 
     # Public endpoints are modeled under client.public, matching /api/public.
     # The leaves under that object are the actual callable API resources.
-    show_resource("Public lists resource", client.public.lists)
-    show_resource("Public subscription resource", client.public.subscription)
+    print("Public lists resource:")
+    print(f"  path: {client.public.lists.path}")
+    print(f"  url:  {client.public.lists.url}")
+    print("Public subscription resource:")
+    print(f"  path: {client.public.subscription.path}")
+    print(f"  url:  {client.public.subscription.url}")
 
     lists = run_optional("retrieve public lists", lambda: client.public.lists.retrieve())
     if lists is not None:

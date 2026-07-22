@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from common import ListMonkClient, enabled, load_settings, setting, show_resource, skip
+from common import enabled, load_settings, setting, skip
+from listmonk import ListMonkClient
 from listmonk.common import SubscriptionStatus
 from listmonk.imports import (
     ImportMode,
@@ -19,8 +20,12 @@ def main() -> None:
 
     # Nested attributes model nested URI paths. The import status endpoint and
     # its logs endpoint are separate resources under /api/import/subscribers.
-    show_resource("Subscriber import resource", client.imports.subscribers)
-    show_resource("Subscriber import logs resource", client.imports.subscribers.logs)
+    print("Subscriber import resource:")
+    print(f"  path: {client.imports.subscribers.path}")
+    print(f"  url:  {client.imports.subscribers.url}")
+    print("Subscriber import logs resource:")
+    print(f"  path: {client.imports.subscribers.logs.path}")
+    print(f"  url:  {client.imports.subscribers.logs.url}")
 
     status = client.imports.subscribers.retrieve()
     print(f"status={status.data.status} imported={status.data.imported}/{status.data.total}")

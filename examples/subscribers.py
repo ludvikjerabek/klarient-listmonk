@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import time
 
-from common import ListMonkClient, enabled, load_settings, run_optional, setting, show_resource, skip
+from common import enabled, load_settings, run_optional, setting, skip
+from listmonk import ListMonkClient
 from listmonk.common import (
     CreateSubscriberStatus,
     PerPage,
@@ -36,7 +37,9 @@ def main() -> None:
 
     # The Python object tree mirrors the REST API tree. This root collection is
     # /api/subscribers, and the printed path/url make that mapping explicit.
-    show_resource("Subscriber collection resource", client.subscribers)
+    print("Subscriber collection resource:")
+    print(f"  path: {client.subscribers.path}")
+    print(f"  url:  {client.subscribers.url}")
 
     query = (
         SubscriberQuery()
@@ -58,7 +61,9 @@ def main() -> None:
         # The HTTP route is still /api/subscribers. This semantic resource makes
         # the capability visible without inventing a URI segment that Listmonk
         # does not have.
-        show_resource("Subscriber SQL query resource", client.subscribers.sql_query)
+        print("Subscriber SQL query resource:")
+        print(f"  path: {client.subscribers.sql_query.path}")
+        print(f"  url:  {client.subscribers.sql_query.url}")
         sql_results = client.subscribers.sql_query.retrieve(
             SubscriberSQLQuery()
             .with_sql(str(sql_query))
@@ -72,9 +77,15 @@ def main() -> None:
         # Child resources hang off the parent resource. The same subscriber can
         # expose /export and /bounces without forcing those actions onto the
         # collection object.
-        show_resource("Single subscriber resource", subscriber_resource)
-        show_resource("Subscriber export resource", subscriber_resource.export)
-        show_resource("Subscriber bounces resource", subscriber_resource.bounces)
+        print("Single subscriber resource:")
+        print(f"  path: {subscriber_resource.path}")
+        print(f"  url:  {subscriber_resource.url}")
+        print("Subscriber export resource:")
+        print(f"  path: {subscriber_resource.export.path}")
+        print(f"  url:  {subscriber_resource.export.url}")
+        print("Subscriber bounces resource:")
+        print(f"  path: {subscriber_resource.bounces.path}")
+        print(f"  url:  {subscriber_resource.bounces.url}")
 
         subscriber = run_optional(
             "retrieve subscriber",
@@ -125,7 +136,9 @@ def main() -> None:
     created_resource = client.subscribers[created.data.id]
     # Once the create call returns a typed response, use the response data to
     # address the newly created resource directly.
-    show_resource("Created subscriber resource", created_resource)
+    print("Created subscriber resource:")
+    print(f"  path: {created_resource.path}")
+    print(f"  url:  {created_resource.url}")
 
     updated = created_resource.update(
         SubscriberUpdate(
@@ -145,7 +158,9 @@ def main() -> None:
     print(f"patched={patched.data.name}")
 
     # Nested action resources make URI-specific operations easy to find.
-    show_resource("Subscriber opt-in resource", created_resource.optin)
+    print("Subscriber opt-in resource:")
+    print(f"  path: {created_resource.optin.path}")
+    print(f"  url:  {created_resource.optin.url}")
     optin = created_resource.optin.send()
     print(f"optin_sent={optin.data}")
 
@@ -167,7 +182,9 @@ def main() -> None:
 
     list_id = setting(settings, "list_id")
     if list_id is not None:
-        show_resource("Bulk subscriber list membership resource", client.subscribers.lists)
+        print("Bulk subscriber list membership resource:")
+        print(f"  path: {client.subscribers.lists.path}")
+        print(f"  url:  {client.subscribers.lists.url}")
         membership = run_optional(
             "update subscriber list membership",
             lambda: client.subscribers.lists.update(
@@ -181,10 +198,9 @@ def main() -> None:
         if membership is not None:
             print(f"membership={membership.data}")
 
-        show_resource(
-            "Query subscriber list membership resource",
-            client.subscribers.query.lists,
-        )
+        print("Query subscriber list membership resource:")
+        print(f"  path: {client.subscribers.query.lists.path}")
+        print(f"  url:  {client.subscribers.query.lists.url}")
         query_membership = run_optional(
             "query update subscriber list membership",
             lambda: client.subscribers.query.lists.update(
@@ -197,7 +213,9 @@ def main() -> None:
         if query_membership is not None:
             print(f"query_membership={query_membership.data}")
 
-    show_resource("Query subscriber blocklist resource", client.subscribers.query.blocklist)
+    print("Query subscriber blocklist resource:")
+    print(f"  path: {client.subscribers.query.blocklist.path}")
+    print(f"  url:  {client.subscribers.query.blocklist.url}")
     query_blocklist = run_optional(
         "query blocklist subscribers",
         lambda: client.subscribers.query.blocklist.blocklist(
@@ -209,7 +227,9 @@ def main() -> None:
     if query_blocklist is not None:
         print(f"query_blocklist={query_blocklist.data}")
 
-    show_resource("Query subscriber delete resource", client.subscribers.query.delete)
+    print("Query subscriber delete resource:")
+    print(f"  path: {client.subscribers.query.delete.path}")
+    print(f"  url:  {client.subscribers.query.delete.url}")
     query_delete = run_optional(
         "query delete subscribers",
         lambda: client.subscribers.query.delete.delete(

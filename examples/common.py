@@ -1,19 +1,9 @@
 from __future__ import annotations
 
 import json
-import sys
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, TypeVar
-
-# When these examples are run from a source checkout, make the local package
-# importable without requiring an editable install first. Installed packages do
-# not need this path entry.
-SOURCE_ROOT = Path(__file__).resolve().parents[1] / "src"
-sys.path.insert(0, str(SOURCE_ROOT))
-
-from klarient import Resource  # noqa: E402
-from listmonk import ListMonkClient  # noqa: E402
 
 T = TypeVar("T")
 
@@ -42,15 +32,6 @@ def enabled(settings: dict[str, Any], name: str) -> bool:
 
 def skip(message: str) -> None:
     print(f"SKIP: {message}")
-
-
-def show_resource(label: str, resource: Resource) -> None:
-    # Every Klarient resource knows the URI path it models and the final URL
-    # that will be called. Printing both is useful when learning how the Python
-    # object tree maps to the REST API tree.
-    print(f"{label}:")
-    print(f"  path: {resource.path}")
-    print(f"  url:  {resource.url}")
 
 
 def run_optional(label: str, action: Callable[[], T]) -> T | None:

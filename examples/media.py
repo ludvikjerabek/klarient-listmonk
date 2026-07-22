@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from common import ListMonkClient, enabled, load_settings, setting, show_resource, skip
+from common import enabled, load_settings, setting, skip
+from listmonk import ListMonkClient
 from listmonk.media import MediaUpload
 
 
@@ -15,7 +16,9 @@ def main() -> None:
     # client.media models /api/media. Indexing it models /api/media/{media_id}.
     # This is the same collection-item shape used by lists, subscribers, and
     # bounces.
-    show_resource("Media collection resource", client.media)
+    print("Media collection resource:")
+    print(f"  path: {client.media.path}")
+    print(f"  url:  {client.media.url}")
 
     media = client.media.retrieve()
     print(f"media_items={len(media.data)}")
@@ -23,7 +26,9 @@ def main() -> None:
     media_id = setting(settings, "media_id")
     if media_id is not None:
         media_resource = client.media[media_id]
-        show_resource("Single media resource", media_resource)
+        print("Single media resource:")
+        print(f"  path: {media_resource.path}")
+        print(f"  url:  {media_resource.url}")
         item = media_resource.retrieve()
         print(f"media={item.data.id} filename={item.data.filename}")
 
@@ -37,7 +42,9 @@ def main() -> None:
 
     if enabled(settings, "delete_uploaded_media"):
         uploaded_resource = client.media[uploaded.data.id]
-        show_resource("Uploaded media resource", uploaded_resource)
+        print("Uploaded media resource:")
+        print(f"  path: {uploaded_resource.path}")
+        print(f"  url:  {uploaded_resource.url}")
         deleted = uploaded_resource.delete()
         print(f"deleted_uploaded={deleted.data}")
 

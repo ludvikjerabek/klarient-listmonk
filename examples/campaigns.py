@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import time
 
-from common import ListMonkClient, enabled, load_settings, run_optional, setting, show_resource, skip
+from common import enabled, load_settings, run_optional, setting, skip
+from listmonk import ListMonkClient
 from listmonk.campaigns import (
     CampaignAnalyticsQuery,
     CampaignAnalyticsType,
@@ -31,7 +32,9 @@ def main() -> None:
 
     # The resource tree mirrors the Listmonk URI tree. Printing the resource
     # path and URL makes that one-to-one mapping visible while reading.
-    show_resource("Campaign collection resource", client.campaigns)
+    print("Campaign collection resource:")
+    print(f"  path: {client.campaigns.path}")
+    print(f"  url:  {client.campaigns.url}")
 
     campaigns = client.campaigns.retrieve(
         CampaignQuery()
@@ -54,11 +57,21 @@ def main() -> None:
     campaign_resource = client.campaigns[campaign_id]
     # Indexing the campaign collection creates /api/campaigns/{campaign_id}.
     # The preview resource hangs off that specific campaign.
-    show_resource("Single campaign resource", campaign_resource)
-    show_resource("Campaign preview resource", campaign_resource.preview)
-    show_resource("Campaign status resource", campaign_resource.status)
-    show_resource("Campaign archive resource", campaign_resource.archive)
-    show_resource("Campaign test-send resource", campaign_resource.test)
+    print("Single campaign resource:")
+    print(f"  path: {campaign_resource.path}")
+    print(f"  url:  {campaign_resource.url}")
+    print("Campaign preview resource:")
+    print(f"  path: {campaign_resource.preview.path}")
+    print(f"  url:  {campaign_resource.preview.url}")
+    print("Campaign status resource:")
+    print(f"  path: {campaign_resource.status.path}")
+    print(f"  url:  {campaign_resource.status.url}")
+    print("Campaign archive resource:")
+    print(f"  path: {campaign_resource.archive.path}")
+    print(f"  url:  {campaign_resource.archive.url}")
+    print("Campaign test-send resource:")
+    print(f"  path: {campaign_resource.test.path}")
+    print(f"  url:  {campaign_resource.test.url}")
 
     campaign = run_optional(
         "retrieve campaign details",
@@ -76,7 +89,9 @@ def main() -> None:
 
     # Some endpoints are not children of one campaign. They are modeled where
     # the URI places them: /api/campaigns/running/stats.
-    show_resource("Running campaign stats resource", client.campaigns.running.stats)
+    print("Running campaign stats resource:")
+    print(f"  path: {client.campaigns.running.stats.path}")
+    print(f"  url:  {client.campaigns.running.stats.url}")
     stats = client.campaigns.running.stats.retrieve(
         CampaignRunningStatsQuery().add_campaign(int(campaign_id))
     )
@@ -85,7 +100,9 @@ def main() -> None:
     analytics_resource = client.campaigns.analytics[CampaignAnalyticsType.VIEWS]
     # Typed path segments can be modeled too. Here the analytics type becomes
     # part of the resource path.
-    show_resource("Campaign analytics resource", analytics_resource)
+    print("Campaign analytics resource:")
+    print(f"  path: {analytics_resource.path}")
+    print(f"  url:  {analytics_resource.url}")
     analytics = run_optional(
         "retrieve campaign analytics",
         lambda: analytics_resource.retrieve(
@@ -180,10 +197,18 @@ def show_campaign_mutations(client: ListMonkClient, settings: dict[str, object])
     print(f"created_campaign={created.data.id}")
 
     created_resource = client.campaigns[created.data.id]
-    show_resource("Created campaign resource", created_resource)
-    show_resource("Created campaign status resource", created_resource.status)
-    show_resource("Created campaign archive resource", created_resource.archive)
-    show_resource("Created campaign test-send resource", created_resource.test)
+    print("Created campaign resource:")
+    print(f"  path: {created_resource.path}")
+    print(f"  url:  {created_resource.url}")
+    print("Created campaign status resource:")
+    print(f"  path: {created_resource.status.path}")
+    print(f"  url:  {created_resource.status.url}")
+    print("Created campaign archive resource:")
+    print(f"  path: {created_resource.archive.path}")
+    print(f"  url:  {created_resource.archive.url}")
+    print("Created campaign test-send resource:")
+    print(f"  path: {created_resource.test.path}")
+    print(f"  url:  {created_resource.test.url}")
 
     try:
         update_request = (

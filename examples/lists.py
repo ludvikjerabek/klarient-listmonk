@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import time
 
-from common import ListMonkClient, enabled, load_settings, setting, show_resource, skip
+from common import enabled, load_settings, setting, skip
+from listmonk import ListMonkClient
 from listmonk.common import ListOptin, ListStatus, ListType, PerPage, SortOrder
 from listmonk.lists import (
     ListCreate,
@@ -24,7 +25,9 @@ def main() -> None:
     # Klarient resources are meant to read like the API documentation. This
     # collection resource maps to /api/lists, and resource.path/resource.url can
     # be printed whenever you want to confirm the modeled URI.
-    show_resource("List collection resource", client.lists)
+    print("List collection resource:")
+    print(f"  path: {client.lists.path}")
+    print(f"  url:  {client.lists.url}")
 
     query = (
         ListQuery()
@@ -45,7 +48,9 @@ def main() -> None:
         list_resource = client.lists[list_id]
         # Indexing a collection creates the child resource for one list:
         # client.lists[123] -> /api/lists/123.
-        show_resource("Single list resource", list_resource)
+        print("Single list resource:")
+        print(f"  path: {list_resource.path}")
+        print(f"  url:  {list_resource.url}")
         item = list_resource.retrieve()
         print(f"list_id={item.data.id} name={item.data.name}")
 
@@ -66,7 +71,9 @@ def main() -> None:
     print(f"created={created.data.id}")
 
     created_resource = client.lists[created.data.id]
-    show_resource("Created list resource", created_resource)
+    print("Created list resource:")
+    print(f"  path: {created_resource.path}")
+    print(f"  url:  {created_resource.url}")
 
     updated = created_resource.update(
         ListUpdate(
