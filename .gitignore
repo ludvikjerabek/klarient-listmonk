@@ -158,4 +158,7 @@ cython_debug/
 .codiumai
 /docs/
 /tests/
-/tools/
+/tools/*
+!/tools/live_smoke/
+!/tools/live_smoke/*.py
+!/tools/live_smoke/README.md

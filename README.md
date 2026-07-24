@@ -52,12 +52,21 @@ examples/
   transactional.py
 ```
 
-Copy `examples/settings.example.json` to `examples/settings.json` and add your Listmonk URL and API credentials to run
-them locally.
+Copy `examples/settings.example.json` to `settings.json` at the project root and add your Listmonk URL and API
+credentials to run them locally. The examples also accept `examples/settings.json` if you prefer to keep local example
+settings beside the example files.
 
 Most scripts are read-only by default. Actions that create, update, delete, upload, blocklist, change defaults, or send
 messages are guarded by settings flags such as `create_test_data`, `delete_import`, `delete_uploaded_media`,
-`delete_bounces`, `send_campaign_test`, `set_default_template`, and `delete_subscriber_bounces`.
+`delete_bounces`, `run_mutation_smoke`, `send_campaign_test`, `set_default_template`, and
+`delete_subscriber_bounces`.
+
+### Maintainer Smoke Tests
+
+Release smoke tests live under `tools/live_smoke/`. They are separate from the user-facing examples and require live
+Listmonk credentials.
+
+See `tools/live_smoke/README.md`.
 
 ### Resource Paths
 
@@ -100,10 +109,61 @@ if __name__ == '__main__':
 
     lists = client.lists.retrieve(ListQuery().with_per_page(PerPage.ALL))
 
-    print("Total Lists: {}".format(lists.record_count))
-    for item in lists:
+    print("Total Lists: {}".format(lists.page.record_count))
+    for item in lists.items():
         print(item.id)
         print(item.name)
+```
+
+### Pagination
+
+Listmonk collection endpoints return `PagedResponse[T]`. The first page is available immediately through
+`result.page`, and `result.data` is a shortcut for `result.page.data`. Iterating the result yields page objects, starting
+with the first page and fetching continuation pages as needed. Calling `items()` flattens page boundaries and yields
+typed rows.
+
+```python
+from listmonk import ListMonkClient
+from listmonk.common import PerPage
+from listmonk.subscribers import SubscriberQuery
+
+if __name__ == '__main__':
+    client = ListMonkClient(
+        base_url="https://listmonk.example.com",
+        username="api-user",
+        access_token="api-token",
+    )
+
+    result = client.subscribers.retrieve(
+        SubscriberQuery()
+        .with_page(1)
+        .with_per_page(PerPage.ALL)
+    )
+
+    print("First Page: {}".format(result.page.current_page_number))
+    print("Total Subscribers: {}".format(result.page.record_count))
+
+    for subscriber in result.data:
+        print(subscriber.email)
+
+    for page in result:
+        print("Page: {}".format(page.current_page_number))
+        for subscriber in page:
+            print(subscriber.email)
+        break
+
+    for subscriber in result.items():
+        print(subscriber.email)
+```
+
+Paged Listmonk actions include:
+
+```text
+client.bounces.retrieve(...)
+client.campaigns.retrieve(...)
+client.lists.retrieve(...)
+client.subscribers.retrieve(...)
+client.subscribers.sql_query.retrieve(...)
 ```
 
 ### Querying Subscribers
@@ -130,8 +190,8 @@ if __name__ == '__main__':
 
     subscribers = client.subscribers.retrieve(query)
 
-    print("Total Subscribers: {}".format(subscribers.record_count))
-    for subscriber in subscribers:
+    print("Total Subscribers: {}".format(subscribers.page.record_count))
+    for subscriber in subscribers.items():
         print(subscriber.id)
         print(subscriber.email)
         print(subscriber.name)
@@ -160,7 +220,7 @@ if __name__ == '__main__':
         .with_per_page(PerPage.ALL)
     )
 
-    print("SQL Results: {}".format(response.record_count))
+    print("SQL Results: {}".format(response.page.record_count))
 ```
 
 This requires the `subscribers:sql_query` permission. Listmonk documents that permission as powerful because it can
@@ -273,7 +333,7 @@ if __name__ == '__main__':
     )
 
     lists = client.lists.retrieve()
-    print(lists.status)
+    print(lists.page.status)
 ```
 
 ### Proxy Support
