@@ -36,9 +36,9 @@ def main() -> None:
         query.with_campaign(int(campaign_id))
 
     bounces = client.bounces.retrieve(query)
-    print(f"bounces={bounces.record_count}")
+    print(f"bounces={bounces.page.record_count}")
 
-    for page in client.bounces:
+    for page in bounces:
         print(f"first_page={page.current_page_number} size={page.page_size}")
         break
 

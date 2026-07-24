@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from klarient import (
-    Page,
-    PageNumberState,
-    PageableResource,
+    PagedResponse,
+    PagedResponseModel,
     ResourcePath,
     SyncResource,
 )
@@ -159,17 +158,11 @@ class CampaignAnalyticsResource(SyncResource[_SyncClientImpl]):
         )
 
 
-class CampaignsResource(PageableResource[_SyncClientImpl, Campaign, PageNumberState]):
+class CampaignsResource(SyncResource[_SyncClientImpl]):
     """Paged campaigns collection resource."""
 
     def __init__(self, owner: Any, *, segment: str = "", **kwargs: Any) -> None:
-        super().__init__(
-            owner,
-            segment=segment,
-            page_item_model=Campaign,
-            pagination=ListmonkPagePagination(),
-            **kwargs,
-        )
+        super().__init__(owner, segment=segment, **kwargs)
         self.__running = CampaignRunningResource(self, segment="running")
         self.__analytics = CampaignAnalyticsResource(self, segment="analytics")
 
@@ -189,9 +182,12 @@ class CampaignsResource(PageableResource[_SyncClientImpl, Campaign, PageNumberSt
     def retrieve(
             self,
             options: CampaignQuery | None = None,
-    ) -> Page[Campaign]:
+    ) -> PagedResponse[Campaign]:
         """Retrieve campaigns with optional query parameters."""
-        return self._retrieve_page(options=options)
+        return self._executor.get(
+            PagedResponseModel(Campaign, ListmonkPagePagination()),
+            options,
+        )
 
     def create(self, options: CampaignCreate) -> CampaignResponse:
         """Create a campaign."""

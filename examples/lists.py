@@ -37,9 +37,9 @@ def main() -> None:
         .with_per_page(PerPage.ALL)
     )
     lists = client.lists.retrieve(query)
-    print(f"lists={lists.record_count}")
+    print(f"lists={lists.page.record_count}")
 
-    for page in client.lists:
+    for page in lists:
         print(f"first_page={page.current_page_number} size={page.page_size}")
         break
 

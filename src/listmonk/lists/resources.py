@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from typing import Any
-
 from klarient import (
-    Page,
-    PageNumberState,
-    PageableResource,
+    PagedResponse,
+    PagedResponseModel,
     ResourcePath,
     SyncResource,
 )
@@ -38,24 +35,18 @@ class ListResource(SyncResource[_SyncClientImpl]):
         return self._executor.delete(BooleanResponse)
 
 
-class ListsResource(PageableResource[_SyncClientImpl, List, PageNumberState]):
+class ListsResource(SyncResource[_SyncClientImpl]):
     """Paged list collection resource."""
-
-    def __init__(self, owner: Any, *, segment: str = "", **kwargs: Any) -> None:
-        super().__init__(
-            owner,
-            segment=segment,
-            page_item_model=List,
-            pagination=ListmonkPagePagination(),
-            **kwargs,
-        )
 
     def __getitem__(self, list_id: int | str) -> ListResource:
         return ListResource(self, segment=ResourcePath.segment(list_id))
 
-    def retrieve(self, options: ListQuery | None = None) -> Page[List]:
+    def retrieve(self, options: ListQuery | None = None) -> PagedResponse[List]:
         """Retrieve lists with optional query parameters."""
-        return self._retrieve_page(options=options)
+        return self._executor.get(
+            PagedResponseModel(List, ListmonkPagePagination()),
+            options,
+        )
 
     def create(self, options: ListCreate) -> ListResponse:
         """Create a list."""

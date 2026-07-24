@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from klarient import (
-    Page,
-    PageNumberState,
-    PageableResource,
+    PagedResponse,
+    PagedResponseModel,
     ResourcePath,
     SyncResource,
 )
@@ -188,37 +187,25 @@ class SubscriberQueryResource(SyncResource[_SyncClientImpl]):
         return self.__delete
 
 
-class SubscriberSQLQueryResource(PageableResource[_SyncClientImpl, Subscriber, PageNumberState]):
+class SubscriberSQLQueryResource(SyncResource[_SyncClientImpl]):
     """SQL query resource for subscribers."""
-
-    def __init__(self, owner: Any, *, segment: str = "", **kwargs: Any) -> None:
-        super().__init__(
-            owner,
-            segment=segment,
-            page_item_model=Subscriber,
-            pagination=ListmonkPagePagination(),
-            **kwargs,
-        )
 
     def retrieve(
             self,
             options: SubscriberSQLQuery,
-    ) -> Page[Subscriber]:
+    ) -> PagedResponse[Subscriber]:
         """Retrieve subscribers using a SQL query filter."""
-        return self._retrieve_page(options=options)
+        return self._executor.get(
+            PagedResponseModel(Subscriber, ListmonkPagePagination()),
+            options,
+        )
 
 
-class SubscribersResource(PageableResource[_SyncClientImpl, Subscriber, PageNumberState]):
+class SubscribersResource(SyncResource[_SyncClientImpl]):
     """Paged subscribers collection resource."""
 
     def __init__(self, owner: Any, *, segment: str = "", **kwargs: Any) -> None:
-        super().__init__(
-            owner,
-            segment=segment,
-            page_item_model=Subscriber,
-            pagination=ListmonkPagePagination(),
-            **kwargs,
-        )
+        super().__init__(owner, segment=segment, **kwargs)
         self.__lists = SubscriberListsResource(self, segment="lists")
         self.__blocklist = SubscribersBlocklistResource(self, segment="blocklist")
         self.__query = SubscriberQueryResource(self, segment="query")
@@ -250,9 +237,12 @@ class SubscribersResource(PageableResource[_SyncClientImpl, Subscriber, PageNumb
     def retrieve(
             self,
             options: SubscriberQuery | None = None,
-    ) -> Page[Subscriber]:
+    ) -> PagedResponse[Subscriber]:
         """Retrieve subscribers with optional query parameters."""
-        return self._retrieve_page(options=options)
+        return self._executor.get(
+            PagedResponseModel(Subscriber, ListmonkPagePagination()),
+            options,
+        )
 
     def create(self, options: SubscriberCreate) -> SubscriberResponse:
         """Create a subscriber."""

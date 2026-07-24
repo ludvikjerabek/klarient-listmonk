@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from typing import Any
-
 from klarient import (
-    Page,
-    PageNumberState,
-    PageableResource,
+    PagedResponse,
+    PagedResponseModel,
     ResourcePath,
     SyncResource,
 )
@@ -24,17 +21,8 @@ class BounceResource(SyncResource[_SyncClientImpl]):
         return self._executor.delete(BooleanResponse)
 
 
-class BouncesResource(PageableResource[_SyncClientImpl, Bounce, PageNumberState]):
+class BouncesResource(SyncResource[_SyncClientImpl]):
     """Paged bounces collection resource."""
-
-    def __init__(self, owner: Any, *, segment: str = "", **kwargs: Any) -> None:
-        super().__init__(
-            owner,
-            segment=segment,
-            page_item_model=Bounce,
-            pagination=ListmonkPagePagination(),
-            **kwargs,
-        )
 
     def __getitem__(self, bounce_id: int | str) -> BounceResource:
         return BounceResource(self, segment=ResourcePath.segment(bounce_id))
@@ -42,9 +30,12 @@ class BouncesResource(PageableResource[_SyncClientImpl, Bounce, PageNumberState]
     def retrieve(
             self,
             options: BounceQuery | None = None,
-    ) -> Page[Bounce]:
+    ) -> PagedResponse[Bounce]:
         """Retrieve bounces with optional query parameters."""
-        return self._retrieve_page(options=options)
+        return self._executor.get(
+            PagedResponseModel(Bounce, ListmonkPagePagination()),
+            options,
+        )
 
     def delete(self, options: BounceDeleteQuery) -> BooleanResponse:
         """Delete bounces in bulk."""

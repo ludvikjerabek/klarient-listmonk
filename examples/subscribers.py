@@ -49,7 +49,7 @@ def main() -> None:
         .with_order(SortOrder.ASC)
     )
     subscribers = client.subscribers.retrieve(query)
-    print(f"subscribers={subscribers.record_count}")
+    print(f"subscribers={subscribers.page.record_count}")
 
     sql_query = setting(settings, "subscriber_sql_query")
     if sql_query is not None:
@@ -69,7 +69,7 @@ def main() -> None:
             .with_sql(str(sql_query))
             .with_per_page(PerPage.ALL)
         )
-        print(f"sql_query_subscribers={sql_results.record_count}")
+        print(f"sql_query_subscribers={sql_results.page.record_count}")
 
     subscriber_id = setting(settings, "subscriber_id")
     if subscriber_id is not None:

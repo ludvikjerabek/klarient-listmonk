@@ -43,9 +43,9 @@ def main() -> None:
         .with_per_page(PerPage.ALL)
         .without_body()
     )
-    print(f"campaigns={campaigns.record_count}")
+    print(f"campaigns={campaigns.page.record_count}")
 
-    for page in client.campaigns:
+    for page in campaigns:
         print(f"first_page={page.current_page_number} size={page.page_size}")
         break
 
